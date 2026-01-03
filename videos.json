@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "Aventura no Espaço",
+    "url": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "thumbnail": "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400",
+    "tags": ["ficção", "espaço"]
+  },
+  {
+    "id": 2,
+    "title": "O Novo Mundo",
+    "url": "https://www.w3schools.com/html/movie.mp4",
+    "thumbnail": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400",
+    "tags": ["natureza", "aventura"]
+  }
+]
