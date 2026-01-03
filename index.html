@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOSTFLIX | Seu Streaming</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.reload()">BOOSTFLIX</h1>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="O que vamos assistir hoje?">
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <div class="hero-info">
+                <h2 id="hero-title">Carregando destaque...</h2>
+                <button id="hero-play">Assistir Agora</button>
+            </div>
+        </section>
+
+        <section class="row">
+            <h3>Sugestões para você</h3>
+            <div class="video-group" id="row-videos"></div>
+        </section>
+
+        <section class="row">
+            <h3>Catálogo Completo</h3>
+            <div class="grid" id="all-videos"></div>
+        </section>
+    </main>
+
+    <div id="player-overlay" class="hidden">
+        <div class="player-container">
+            <video id="main-video" controls preload="auto"></video>
+            <button class="close-btn" onclick="closePlayer()">✕ Fechar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
