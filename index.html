@@ -3,41 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOSTFLIX | Seu Streaming</title>
+    <title>BOOSTFLIX</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1 onclick="window.location.reload()">BOOSTFLIX</h1>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="O que vamos assistir hoje?">
-        </div>
+        <input type="text" id="search-input" placeholder="Pesquisar títulos ou tags...">
     </header>
 
     <main>
         <section class="hero" id="hero">
             <div class="hero-info">
-                <h2 id="hero-title">Carregando destaque...</h2>
-                <button id="hero-play">Assistir Agora</button>
+                <h2 id="hero-title"></h2>
+                <button id="hero-btn-details">Mais Informações</button>
             </div>
         </section>
 
-        <section class="row">
-            <h3>Sugestões para você</h3>
-            <div class="video-group" id="row-videos"></div>
-        </section>
-
-        <section class="row">
-            <h3>Catálogo Completo</h3>
-            <div class="grid" id="all-videos"></div>
+        <section class="catalog-section">
+            <h3>Todos os Vídeos</h3>
+            <div class="grid" id="main-grid"></div>
         </section>
     </main>
 
-    <div id="player-overlay" class="hidden">
-        <div class="player-container">
-            <video id="main-video" controls preload="auto"></video>
-            <button class="close-btn" onclick="closePlayer()">✕ Fechar</button>
+    <div id="details-modal" class="modal">
+        <div class="details-card">
+            <button class="close-modal" onclick="closeDetails()">✕</button>
+            <img id="details-img" src="" alt="Capa">
+            <div class="details-content">
+                <h2 id="details-title"></h2>
+                <div class="meta">
+                    <span id="details-rating" class="rating"></span>
+                    <span id="details-tags"></span>
+                </div>
+                <p id="details-desc"></p>
+                <div class="actions">
+                    <button class="btn-play" id="btn-play-now">▶ Assistir</button>
+                    <button class="btn-full" onclick="toggleFullscreen()">⛶ Tela Cheia</button>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <div id="video-wrapper" class="video-full-screen">
+        <button class="btn-back" onclick="stopVideo()">⬅ Voltar</button>
+        <video id="main-video" controls></video>
     </div>
 
     <script src="script.js"></script>
