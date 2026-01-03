@@ -1,70 +1,86 @@
-let database = [];
+let videoData = [];
 
-// Carregar dados do JSON
-async function loadData() {
-    const response = await fetch('videos.json');
-    database = await response.json();
-    initApp();
+// 1. Carregar Dados
+async function loadVideos() {
+    try {
+        const response = await fetch('videos.json');
+        videoData = await response.json();
+        renderApp();
+    } catch (e) { console.error("Erro ao carregar JSON", e); }
 }
 
-function initApp() {
-    renderHero(database[Math.floor(Math.random() * database.length)]);
-    renderList(database, 'row-videos', 4); // Apenas 4 recomendações
-    renderList(database, 'all-videos');    // Tudo
-}
-
-function renderHero(video) {
+function renderApp() {
+    // Hero Aleatório
+    const randomVideo = videoData[Math.floor(Math.random() * videoData.length)];
     const hero = document.getElementById('hero');
-    hero.style.backgroundImage = `linear-gradient(to top, #141414, transparent), url(${video.thumbnail})`;
-    document.getElementById('hero-title').innerText = video.title;
-    document.getElementById('hero-play').onclick = () => openPlayer(video.url);
+    hero.style.backgroundImage = `linear-gradient(to top, #141414, transparent), url(${randomVideo.thumbnail})`;
+    document.getElementById('hero-title').innerText = randomVideo.title;
+    document.getElementById('hero-btn-details').onclick = () => openDetails(randomVideo);
+
+    // Grid Inicial
+    renderGrid(videoData);
 }
 
-function renderList(list, containerId, limit = null) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '';
-    const items = limit ? list.slice(0, limit) : list;
-
-    items.forEach(video => {
-        const card = document.createElement('div');
-        card.className = 'video-card';
-        card.innerHTML = `
-            <img src="${video.thumbnail}">
-            <div style="padding:10px"><strong>${video.title}</strong></div>
-        `;
-        card.onclick = () => openPlayer(video.url);
-        container.appendChild(card);
+function renderGrid(list) {
+    const grid = document.getElementById('main-grid');
+    grid.innerHTML = '';
+    list.forEach(v => {
+        const div = document.createElement('div');
+        div.className = 'video-card';
+        div.innerHTML = `<img src="${v.thumbnail}"><div style="padding:10px"><b>${v.title}</b></div>`;
+        div.onclick = () => openDetails(v);
+        grid.appendChild(div);
     });
 }
 
-// Player
-function openPlayer(url) {
-    const overlay = document.getElementById('player-overlay');
+// 2. Lógica do Modal de Detalhes
+function openDetails(video) {
+    const modal = document.getElementById('details-modal');
+    document.getElementById('details-img').src = video.thumbnail;
+    document.getElementById('details-title').innerText = video.title;
+    document.getElementById('details-desc').innerText = video.description;
+    document.getElementById('details-tags').innerText = "Tags: " + video.tags.join(', ');
+    
+    // Cor da Classificação
+    const ratingEl = document.getElementById('details-rating');
+    ratingEl.innerText = video.rating;
+    ratingEl.style.backgroundColor = video.rating === 'L' ? '#46d369' : 
+                                   video.rating === '18' ? '#e50914' : '#f5a623';
+
+    document.getElementById('btn-play-now').onclick = () => startVideo(video.url);
+    modal.style.display = 'flex';
+}
+
+function closeDetails() { document.getElementById('details-modal').style.display = 'none'; }
+
+// 3. Lógica do Player
+function startVideo(url) {
+    const wrapper = document.getElementById('video-wrapper');
     const video = document.getElementById('main-video');
     video.src = url;
-    overlay.classList.add('active');
+    wrapper.style.display = 'block';
     video.play();
 }
 
-function closePlayer() {
-    const overlay = document.getElementById('player-overlay');
+function stopVideo() {
     const video = document.getElementById('main-video');
     video.pause();
-    overlay.classList.remove('active');
+    document.getElementById('video-wrapper').style.display = 'none';
 }
 
-// Busca
-document.getElementById('search-input').addEventListener('input', (e) => {
+function toggleFullscreen() {
+    const video = document.getElementById('main-video');
+    if (video.requestFullscreen) video.requestFullscreen();
+}
+
+// 4. Busca em Tempo Real
+document.getElementById('search-input').oninput = (e) => {
     const term = e.target.value.toLowerCase();
-    const filtered = database.filter(v => 
+    const filtered = videoData.filter(v => 
         v.title.toLowerCase().includes(term) || 
-        v.tags.some(t => t.includes(term))
+        v.tags.some(t => t.toLowerCase().includes(term))
     );
-    renderList(filtered, 'all-videos');
-});
+    renderGrid(filtered);
+};
 
-// Tecla ESC para sair
-window.addEventListener('keydown', (e) => { if(e.key === "Escape") closePlayer(); });
-
-loadData();
-                    
+loadVideos();
